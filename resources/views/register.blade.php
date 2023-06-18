@@ -52,13 +52,30 @@
                       <label class="form-label" for="form3Example4cd">Repeat your password</label>
                     </div>
                   </div>
+                  <label for="country">Country</label>
+                  <select class="form-control" id="country-dropdown">
+                  <option value="">Select Country</option>
+                  @foreach ($countries as $country)
+                  <option value="{{$country->id}}">
+                  {{$country->name}}
+                  </option>
+                  @endforeach
+                  </select>
 
+                  <label for="state">State</label>
+                    <select class="form-control" id="state-dropdown">
+                    </select>
+                   
+                    <label for="city">City</label>
+                    <select class="form-control" id="city-dropdown">
+                    </select>
                   <div class="form-check d-flex justify-content-center mb-5">
                     <input class="form-check-input me-2" type="checkbox" name="chackbox" value="" id="form2Example3c"/>
 
                     <label class="form-check-label" for="form2Example3">I agree all statements in <a href="#!">Terms of service</a>
                     </label>
                 </div>
+
                   <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                     <button type="submit" class="btn btn-primary btn-lg">Register</button>
                   </div>
@@ -79,6 +96,8 @@
     </div>
   </div>
 </section>
+
+
 </body>
 </html>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -135,3 +154,46 @@
       });
     });
   </script>
+<script>
+    $(document).ready(function() {
+    $('#country-dropdown').on('change', function() {
+    var country_id = this.value;
+    $("#state-dropdown").html('');
+    $.ajax({
+    url:"{{url('get-states-by-country')}}",
+    type: "POST",
+    data: {
+    country_id: country_id,
+    _token: '{{csrf_token()}}'
+    },
+    dataType : 'json',
+    success: function(result){
+    $('#state-dropdown').html('<option value="">Select State</option>');
+    $.each(result.states,function(key,value){
+    $("#state-dropdown").append('<option value="'+value.id+'">'+value.name+'</option>');
+    });
+    $('#city-dropdown').html('<option value="">Select State First</option>');
+    }
+    });
+    });
+    $('#state-dropdown').on('change', function() {
+    var state_id = this.value;
+    $("#city-dropdown").html('');
+    $.ajax({
+    url:"{{url('get-cities-by-state')}}",
+    type: "POST",
+    data: {
+    state_id: state_id,
+    _token: '{{csrf_token()}}'
+    },
+    dataType : 'json',
+    success: function(result){
+    $('#city-dropdown').html('<option value="">Select City</option>');
+    $.each(result.cities,function(key,value){
+    $("#city-dropdown").append('<option value="'+value.id+'">'+value.name+'</option>');
+    });
+    }
+    });
+    });
+    });
+    </script>

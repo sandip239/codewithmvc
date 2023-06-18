@@ -18,6 +18,7 @@ Route::get('/', function () {
     return view('register');
 });
 
+Route::get('register',[authcontroller::class,'registerView'])->name('registerView');
 Route::post('register',[authcontroller::class,'register'])->name('register');
 Route::get('login',[authcontroller::class,'loginView'])->name('loginview');
 
@@ -30,4 +31,8 @@ Route::get('edit/{id}',[authcontroller::class,'edit']);
 Route::post('update',[authcontroller::class,'update'])->name('update');
 
 Route::get('delete/{id}',[authcontroller::class,'delete']);
+
+Route::get('country-state-city', [authcontroller::class, 'index']);
+Route::post('get-states-by-country', [authcontroller::class, 'getState']);
+Route::post('get-cities-by-state', [authcontroller::class, 'getCity']);
 

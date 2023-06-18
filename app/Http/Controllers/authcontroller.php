@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\City;
+use App\Models\Country;
+use App\Models\State;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,6 +12,11 @@ use Illuminate\Support\Facades\Hash;
 
 class authcontroller extends Controller
 {
+     public function registerView()
+      {
+        $countries = Country::all();
+        return view('register',compact('countries'));
+      }
     public function register(request $request)
     {
       $user = new User();
@@ -70,5 +78,24 @@ public function deshboard()
     $user->delete();
     return redirect()->route('deshboard');
  }
+
+ public function index()
+ {
+     $data['countries'] = Country::get(["name","id"]);
+     return view('country-state-city',$data);
+ }
+ public function getState(Request $request)
+ {
+     $data['states'] = State::where("country_id",$request->country_id)
+                 ->get(["name","id"]);
+     return response()->json($data);
+ }
+ public function getCity(Request $request)
+ {
+     $data['cities'] = City::where("state_id",$request->state_id)
+                 ->get(["name","id"]);
+     return response()->json($data);
+ }
+
 
 }
