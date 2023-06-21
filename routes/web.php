@@ -20,19 +20,22 @@ Route::get('/', function () {
 
 Route::get('register',[authcontroller::class,'registerView'])->name('registerView');
 Route::post('register',[authcontroller::class,'register'])->name('register');
+
 Route::get('login',[authcontroller::class,'loginView'])->name('loginview');
-
 Route::post('login',[authcontroller::class,'login'])->name('login');
+    Route::get('country-state-city', [authcontroller::class, 'index']);
+    Route::post('get-states-by-country', [authcontroller::class, 'getState']);
+    Route::post('get-cities-by-state', [authcontroller::class, 'getCity']);
 
-Route::get('deshboard',[authcontroller::class,'deshboard'])->name('deshboard');
 
-Route::get('edit/{id}',[authcontroller::class,'edit']);
+Route::middleware('auth')->group(function () {
+    Route::get('deshboard',[authcontroller::class,'deshboard'])->name('deshboard');
 
-Route::post('update',[authcontroller::class,'update'])->name('update');
+    Route::get('edit/{id}',[authcontroller::class,'edit']);
 
-Route::get('delete/{id}',[authcontroller::class,'delete']);
+    Route::post('update',[authcontroller::class,'update'])->name('update');
 
-Route::get('country-state-city', [authcontroller::class, 'index']);
-Route::post('get-states-by-country', [authcontroller::class, 'getState']);
-Route::post('get-cities-by-state', [authcontroller::class, 'getCity']);
+    Route::get('delete/{id}',[authcontroller::class,'delete']);
 
+
+});
